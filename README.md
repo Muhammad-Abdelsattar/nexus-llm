@@ -14,22 +14,22 @@ The core library is lightweight. Support for specific LLM providers can be insta
 
 ```bash
 # Install the core library
-pip install simple-llm-interface
+pip install nexus-llm
 
 # To install support for a specific provider, use extras
 
 # Example: Install support for Google and OpenAI (and Azure openai)
-pip install "simple-llm-interface[google,openai]"
+pip install "nexus-llm[google,openai]"
 
 # Example: Install support for all built-in providers
-pip install "simple-llm-interface[all]"
+pip install "nexus-llm[all]"
 ```
 
 You can also install directly from the Git repository:
 
 ```bash
 # Example: Install with 'google' extras from git
-pip install "git+https://github.com/muhammad-abdelsattar/simple-llm-interface.git#egg=simple-llm-interface[google]"
+pip install "git+https://github.com/muhammad-abdelsattar/nexus-llm.git#egg=nexus-llm[google]"
 ```
 
 ### Features
@@ -97,7 +97,7 @@ This example demonstrates using both a built-in alias and a custom provider.
 
 ```bash
 # Install the library with support for Google
-pip install "simple-llm-interface[google]"
+pip install "nexus-llm[google]"
 ```
 
 **2. Configuration (`settings.yaml`)**
@@ -123,7 +123,7 @@ llm_providers:
 ```python
 import asyncio
 from dotenv import load_dotenv
-from simple_llm_interface import LLMInterface, load_settings_from_yaml
+from nexus_llm import LLMInterface, load_settings_from_yaml
 
 async def main():
     load_dotenv()

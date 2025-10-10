@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "simple-llm-interface"
+name = "nexus-llm"
 version = "0.1.0"
 description = "A simple, high-level wrapper around LangChain for my personal projects."
 readme = "README.md"
@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/muhammad-abdelsattar/simple-llm-interface"
+Homepage = "https://github.com/muhammad-abdelsattar/nexus-llm"
 
 [project.optional-dependencies]
 google = ["langchain-google-genai"]
@@ -34,11 +34,11 @@ groq = ["langchain-groq"]
 ollama = ["langchain-community", "langchain-ollama"]
 
 all = [
-    "simple-llm-interface[google]",
-    "simple-llm-interface[openai]",
-    "simple-llm-interface[anthropic]",
-    "simple-llm-interface[groq]",
-    "simple-llm-interface[ollama]",
+    "nexus-llm[google]",
+    "nexus-llm[openai]",
+    "nexus-llm[anthropic]",
+    "nexus-llm[groq]",
+    "nexus-llm[ollama]",
 ]
 
 [tool.setuptools.packages.find]
