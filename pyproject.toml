@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simple-llm-interface"
+version = "0.1.0"
+description = "A simple, high-level wrapper around LangChain for my personal projects."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "langchain-core>=0.2.0",
+    "pydantic>=2.0.0",
+    "omegaconf>=2.3.0",
+    "PyYAML>=6.0",
+    "aiofiles>=23.2.0",
+    "python-dotenv>=1.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/muhammad-abdelsattar/simple-llm-interface"
+
+[project.optional-dependencies]
+google = ["langchain-google-genai"]
+openai = ["langchain-openai"]
+anthropic = ["langchain-anthropic"]
+groq = ["langchain-groq"]
+ollama = ["langchain-community", "langchain-ollama"]
+
+all = [
+    "simple-llm-interface[google]",
+    "simple-llm-interface[openai]",
+    "simple-llm-interface[anthropic]",
+    "simple-llm-interface[groq]",
+    "simple-llm-interface[ollama]",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
