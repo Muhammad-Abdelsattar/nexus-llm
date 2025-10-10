@@ -1,4 +1,3 @@
-````markdown
 # Simple LLM Interface
 
 A straightforward, high-level wrapper around LangChain for personal convenience.
@@ -25,7 +24,6 @@ pip install "simple-llm-interface[google,openai]"
 # Example: Install support for all built-in providers
 pip install "simple-llm-interface[all]"
 ```
-````
 
 You can also install directly from the Git repository:
 
