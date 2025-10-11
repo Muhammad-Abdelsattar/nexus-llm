@@ -10,26 +10,10 @@ It is **not** intended to be a replacement for LangChain or any other framework.
 
 ### Installation
 
-The core library is lightweight. Support for specific LLM providers can be installed as "extras".
+The library is designed for a simple, all-in-one installation that includes support for all built-in LLM providers.
 
 ```bash
-# Install the core library
-pip install nexus-llm
-
-# To install support for a specific provider, use extras
-
-# Example: Install support for Google and OpenAI (and Azure openai)
-pip install "nexus-llm[google,openai]"
-
-# Example: Install support for all built-in providers
-pip install "nexus-llm[all]"
-```
-
-You can also install directly from the Git repository:
-
-```bash
-# Example: Install with 'google' extras from git
-pip install "git+https://github.com/muhammad-abdelsattar/nexus-llm.git#egg=nexus-llm[google]"
+pip install "git+https://github.com/muhammad-abdelsattar/nexus-llm.git#egg=nexus-llm"
 ```
 
 ### Features
@@ -46,16 +30,16 @@ You can configure providers using either a convenient `type` alias or a full `cl
 
 #### Built-in Provider Aliases (`type`)
 
-This library includes aliases for the following providers. To use one, you must install its corresponding extra (e.g., `pip install "simple-llm-interface[google]"`).
+This library includes built-in support for the following providers.
 
-| Alias (`type`) | Required Extra | LangChain Class Path                            |
-| :------------- | :------------- | :---------------------------------------------- |
-| `google`       | `[google]`     | `langchain_google_genai.ChatGoogleGenerativeAI` |
-| `openai`       | `[openai]`     | `langchain_openai.ChatOpenAI`                   |
-| `azure`        | `[openai]`     | `langchain_openai.AzureChatOpenAI`              |
-| `anthropic`    | `[anthropic]`  | `langchain_anthropic.ChatAnthropic`             |
-| `groq`         | `[groq]`       | `langchain_groq.ChatGroq`                       |
-| `ollama`       | `[ollama]`     | `langchain_ollama.ChatOllama`                   |
+| Alias (`type`) | LangChain Class Path                            |
+| :------------- | :---------------------------------------------- |
+| `google`       | `langchain_google_genai.ChatGoogleGenerativeAI` |
+| `openai`       | `langchain_openai.ChatOpenAI`                   |
+| `azure`        | `langchain_openai.AzureChatOpenAI`              |
+| `anthropic`    | `langchain_anthropic.ChatAnthropic`             |
+| `groq`         | `langchain_groq.ChatGroq`                       |
+| `ollama`       | `langchain_ollama.ChatOllama`                   |
 
 #### Using a Custom Provider (`class_path`)
 
@@ -64,8 +48,10 @@ If a provider is not in the list, or you have your own custom model class, you c
 **Step 1: Install the necessary package**
 First, ensure the Python package for your custom model is installed in your environment.
 
+For example, if you want to install the langchain-aws bedrock, you can run:
+
 ```bash
-pip install some-custom-llm-package
+pip install langchain-aws
 ```
 
 **Step 2: Configure `settings.yaml`**
@@ -74,13 +60,29 @@ Reference the full import path in your settings file. The library will dynamical
 ```yaml
 # settings.yaml
 llm_providers:
-    my_special_model:
+    bedrock:
         # No 'type' here, we use the full class_path
-        class_path: "some_custom_llm_package.chat_models.MySpecialChatModel"
+        class_path: "langchain_aws.bedrock.ChatBedrock"
         params:
-            # Parameters required by MySpecialChatModel's constructor
-            endpoint_url: "https://api.special.ai/v2"
             api_key: "${env:SPECIAL_API_KEY}"
+            temperature: 0.5
+```
+
+**Step 3: Use the provider**
+
+Now that you have the provider configured, you can use it in your LLM interface.
+
+```python
+from nexus_llm import LLMInterface, load_settings_from_yaml
+
+settings = load_settings_from_yaml("settings.yaml")
+bedrock_interface = LLMInterface(settings, "bedrock")
+
+response = bedrock_interface.agenerate_text(
+    system_prompt="You are a helpful assistant.",
+    user_input="What is the capital of France?",
+)
+print(f"Response: {response}")
 ```
 
 ### Quick Start Example
@@ -96,8 +98,7 @@ This example demonstrates using both a built-in alias and a custom provider.
 ```
 
 ```bash
-# Install the library with support for Google
-pip install "nexus-llm[google]"
+pip install "git+https://github.com/muhammad-abdelsattar/nexus-llm.git#egg=nexus-llm"
 ```
 
 **2. Configuration (`settings.yaml`)**
@@ -109,13 +110,6 @@ llm_providers:
         params:
             model: "gemini-2.5-flash"
             google_api_key: "${env:GOOGLE_API_KEY}"
-
-    # A placeholder for a custom model for demonstration
-    custom_echo:
-        class_path: "langchain_core.language_models.fake.FakeListChatModel"
-        params:
-            responses:
-                - "This is a response from the custom echo model!"
 ```
 
 **3. Main Application (`main.py`)**
@@ -137,15 +131,6 @@ async def main():
         user_input="What is the capital of France?",
     )
     print(f"Response: {response}\n")
-
-    # use the custom provider via 'class_path'
-    custom_interface = LLMInterface(settings, "custom_echo")
-    print("|> Calling Custom Provider ...")
-    response = await custom_interface.agenerate_text(
-        system_prompt="This does not matter for the fake model.",
-        user_input="This doesn't either.",
-    )
-    print(f"Response: {response}")
 
 if __name__ == "__main__":
     asyncio.run(main())

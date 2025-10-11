@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "nexus-llm"
 version = "0.1.0"
-description = "A simple, high-level wrapper around LangChain for my personal projects."
+description = "A simple, high-level wrapper around LangChain for simplicity and convenience."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -20,26 +20,34 @@ dependencies = [
     "omegaconf>=2.3.0",
     "PyYAML>=6.0",
     "aiofiles>=23.2.0",
-    "python-dotenv>=1.0.0"
+    "python-dotenv>=1.0.0",
+    "langchain-google-genai",
+    "langchain-openai",
+    "langchain-anthropic",
+    "langchain-groq",
+    "langchain-community",
+    "langchain-ollama"
 ]
 
 [project.urls]
 Homepage = "https://github.com/muhammad-abdelsattar/nexus-llm"
 
-[project.optional-dependencies]
-google = ["langchain-google-genai"]
-openai = ["langchain-openai"]
-anthropic = ["langchain-anthropic"]
-groq = ["langchain-groq"]
-ollama = ["langchain-community", "langchain-ollama"]
-
-all = [
-    "nexus-llm[google]",
-    "nexus-llm[openai]",
-    "nexus-llm[anthropic]",
-    "nexus-llm[groq]",
-    "nexus-llm[ollama]",
-]
+# MODIFIED: This section is now primarily for convention and explicit dependency declaration,
+# as the packages are already included in the base install.
+# [project.optional-dependencies]
+# google = ["langchain-google-genai"]
+# openai = ["langchain-openai"]
+# anthropic = ["langchain-anthropic"]
+# groq = ["langchain-groq"]
+# ollama = ["langchain-community", "langchain-ollama"]
+#
+# all = [
+#     "nexus-llm[google]",
+#     "nexus-llm[openai]",
+#     "nexus-llm[anthropic]",
+#     "nexus-llm[groq]",
+#     "nexus-llm[ollama]",
+# ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
