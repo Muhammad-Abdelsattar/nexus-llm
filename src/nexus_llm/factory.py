@@ -3,10 +3,19 @@ from typing import TYPE_CHECKING
 
 from .exceptions import ProviderNotFoundError, ConfigurationError
 
-# Use a TYPE_CHECKING block to prevent a circular import, the factory needs the Settings model for type hints, but the config module doesn't need the factory.
 if TYPE_CHECKING:
     from langchain_core.language_models.chat_models import BaseChatModel
     from .config import Settings
+
+
+BUILT_IN_PROVIDERS = {
+    "google": "langchain_google_genai.ChatGoogleGenerativeAI",
+    "openai": "langchain_openai.ChatOpenAI",
+    "azure": "langchain_openai.AzureChatOpenAI",
+    "anthropic": "langchain_anthropic.ChatAnthropic",
+    "groq": "langchain_groq.ChatGroq",
+    "ollama": "langchain_ollama.ChatOllama",
+}
 
 
 class LLMFactory:
@@ -31,7 +40,7 @@ class LLMFactory:
         entire client creation process.
 
         Args:
-            provider_key: The key from the settings file (e.g., 'google_gemini').
+            provider_key: The key from the settings file (e.g., 'google_default').
 
         Returns:
             An instantiated and configured LangChain LLM client.
@@ -50,18 +59,27 @@ class LLMFactory:
 
         provider_config = self.settings.llm_providers[provider_key]
 
+        if provider_config.type:
+            if provider_config.type in BUILT_IN_PROVIDERS:
+                provider_config.class_path = BUILT_IN_PROVIDERS[provider_config.type]
+            else:
+                valid_types = list(BUILT_IN_PROVIDERS.keys())
+                raise ConfigurationError(
+                    f"Invalid provider type '{provider_config.type}' for provider key '{provider_key}'. "
+                    f"Available built-in types are: {valid_types}"
+                )
+
         try:
             module_path, class_name = provider_config.class_path.rsplit(".", 1)
             module = importlib.import_module(module_path)
             llm_class = getattr(module, class_name)
         except (ImportError, AttributeError) as e:
-            # This catches errors like typos in the module/class name or if the required library (e.g., 'langchain_google_genai') is not installed.
             raise ConfigurationError(
                 f"Failed to import LLM class for '{provider_key}'. "
-                f"Check the class_path '{provider_config.class_path}'. Error: {e}"
+                f"Check the class_path '{provider_config.class_path}' and ensure the "
+                f"required package is installed. Error: {e}"
             ) from e
 
-        # instantiate the class with the parameters from the settings.
         try:
             return llm_class(**provider_config.params)
         except TypeError as e:
