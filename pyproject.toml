@@ -15,7 +15,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "langchain-core>=0.2.0 , <1.0.0",
+    "langchain-core>=0.3.79 , <1.0.0",
     "pydantic>=2.0.0",
     "omegaconf>=2.3.0",
     "PyYAML>=6.0",
@@ -25,7 +25,7 @@ dependencies = [
     "langchain-openai==0.3.35",
     "langchain-anthropic==0.3.22",
     "langchain-groq==0.3.8",
-    "langchain-community",
+    "langchain-community==0.3.31",
     "langchain-ollama==0.3.10"
 ]
 
